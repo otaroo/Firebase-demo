@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Realtime Database</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+    crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+      crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+        <script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
+
+        <script>
+          var config = {
+            apiKey: "AIzaSyADVkXiW00jrSQw3wAnMbH3wsX9KdaDf0s",
+            authDomain: "jarvis-e3312.firebaseapp.com",
+            databaseURL: "https://jarvis-e3312.firebaseio.com",
+            storageBucket: "jarvis-e3312.appspot.com",
+            messagingSenderId: "163934910926"
+          };
+
+          firebase.initializeApp(config);
+
+          var database = firebase.database();
+
+          function writeUserData(userId, name, email) {
+            firebase.database().ref('users/' + userId).set({
+              username: name,
+              email: email,
+
+            });
+          }
+          //writeUserData("ID1", "name", "email");
+
+          var starCountRef = firebase.database().ref('users/ID1');
+          starCountRef.on('value', function (snapshot) {
+            //updateStarCount(".user", snapshot.val());
+          });
+
+          function updateStarCount(postElement, val) {
+
+            $(".list-group").append(' <li class="list-group-item">email: ' + val.email + '</li>');
+
+          }
+
+          // Create a new post reference with an auto-generated id
+          var postListRef = firebase.database().ref('message');
+          var newPostRef = postListRef.push();
+          //newPostRef.set("hi");
+
+          postListRef.on('child_added', function (data) {
+            list(".user", data.val(), data.key);
+          });
+          postListRef.on('child_removed', function (data) {
+            removelist("jj", data.key);
+          });
+          function list(postElement, val, key) {
+            $(".list-group").append(' <li class="list-group-item" id="' + key + '">User: ' + val + '</li>');
+            $('#' + key + '').hide().fadeIn();
+          }
+          function removelist(postElement, key) {
+            $('#' + key + '').fadeOut();
+          }
+        </script>
+
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="row">
+      <div class="col"></div>
+      <div class="col-6">
+        <h1 class="display-3">Realtime Database</h1>
+      </div>
+      <div class="col"></div>
+    </div>
+    <div class="row ">
+      <div class="col">
+      </div>
+      <div class="col-6">
+        <div class="card">
+          <ul class="list-group list-group-flush">
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

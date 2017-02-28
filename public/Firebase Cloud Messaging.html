@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Firebase Cloud Messaging</title>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+    crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+      crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
+
+
+
+  <script>
+    var config = {
+      apiKey: "AIzaSyADVkXiW00jrSQw3wAnMbH3wsX9KdaDf0s",
+      authDomain: "jarvis-e3312.firebaseapp.com",
+      databaseURL: "https://jarvis-e3312.firebaseio.com",
+      storageBucket: "jarvis-e3312.appspot.com",
+      messagingSenderId: "163934910926"
+    };
+
+    firebase.initializeApp(config);
+    const messaging = firebase.messaging();
+    messaging.requestPermission()
+      .then(function () {
+        console.log('Have Permission');
+        return messaging.getToken();
+      })
+      .then(function (Token) {
+        console.log(Token);
+      })
+      .catch(function () {
+        console.log('Not have Permission');
+      })
+
+    messaging.onTokenRefresh(function () {
+      messaging.getToken()
+        .then(function (refreshedToken) {
+          console.log('Token refreshed.');
+          // Indicate that the new Instance ID token has not yet been sent to the
+          // app server.
+          setTokenSentToServer(false);
+          // Send Instance ID token to app server.
+          sendTokenToServer(refreshedToken);
+          // ...
+        })
+        .catch(function (err) {
+          console.log('Unable to retrieve refreshed token ', err);
+          showToken('Unable to retrieve refreshed token ', err);
+        });
+    });
+
+    messaging.onMessage(function (payload) {
+      console.log("Message received. ", payload);
+      $(".list-group").append(' <li class="list-group-item">'+payload.notification.title+': ' + payload.notification.body + '</li>');
+     
+    });
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col"></div>
+      <div class="col-6">
+        <h1>Firebase Cloud Messaging</h1>
+      </div>
+      <div class="col"></div>
+    </div>
+    <div class="row ">
+      <div class="col">
+      </div>
+      <div class="col-6">
+        <div class="card">
+          <ul class="list-group list-group-flush">
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

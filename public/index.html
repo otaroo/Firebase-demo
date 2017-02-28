@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Jarvis</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+        crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+            crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+                crossorigin="anonymous"></script>
+
+                <script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
+                <script>
+                    var config = {
+                        apiKey: "AIzaSyADVkXiW00jrSQw3wAnMbH3wsX9KdaDf0s",
+                        authDomain: "jarvis-e3312.firebaseapp.com",
+                        databaseURL: "https://jarvis-e3312.firebaseio.com",
+                        storageBucket: "jarvis-e3312.appspot.com",
+                        messagingSenderId: "163934910926"
+                    };
+                    firebase.initializeApp(config);
+
+                    var database = firebase.database();
+
+                    var postListRef = firebase.database().ref('page');
+                    var newPostRef = postListRef.push();
+                    //newPostRef.set("hi");
+
+                    postListRef.on('child_added', function (data) {
+                        list(data.val(), data.key);
+                    });
+                    postListRef.on('child_removed', function (data) {
+                        removelist(data.key);
+                    });
+                    function list(val, key) {
+                        $(".list-group").append(' <li class="list-group-item" id="' + key + '"><a href="/' + val.link + '">' + val.page + '</a></li>');
+                        $('#' + key + '').hide().fadeIn();
+                    }
+                    function removelist(key) {
+                        $('#' + key + '').fadeOut();
+                    }
+                </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header clearfix">
+            <nav>
+                <ul class="nav nav-pills float-right">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">firebase.google.com</h3>
+        </div>
+        <div class="jumbotron">
+            <div class="media">
+                <div class="media-body">
+                    <h5 class="display-3">App success made simple</h5>
+                   <p> The tools and infrastructure you need to build better apps and grow successful businesses </p>
+                     <p><a class="btn btn-lg btn-success" href="https://firebase.google.com/" role="button">Let's check it out</a></p>
+                </div>
+                <img class="d-flex ml-3" width="200rem" src="firebase-logo.png" alt="Generic placeholder image">
+            </div>
+           
+        </div>
+        <div class="row ">
+            <div class="col">
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <ul class="list-group list-group-flush">
+
+                    </ul>
+                </div>
+            </div>
+            <div class="col">
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
