@@ -11,11 +11,11 @@
             crossorigin="anonymous"></script>
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
                 crossorigin="anonymous"></script>
-
+                <script src="https://use.fontawesome.com/4c1ee4b315.js"></script>
+                 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
                 <script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
-                 <script src="/config.js"></script>
+                <script src="/config.js"></script>
                 <script>
-                  
                     firebase.initializeApp(config);
 
                     var database = firebase.database();
@@ -32,12 +32,36 @@
                     });
                     function list(val, key) {
                         $(".list-group").append(' <li class="list-group-item" id="' + key + '"><a href="/' + val.link + '">' + val.page + '</a></li>');
+                        //$('#' + key + '').append(' <img src="/firebase-logo.png" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="">');
+                        //$('#' + key + '').append(' <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
+                        $('#' + key + '').prepend('<i class="material-icons orange600">' + val.icon + '</i> ');
                         $('#' + key + '').hide().fadeIn();
                     }
                     function removelist(key) {
                         $('#' + key + '').fadeOut();
                     }
+
+
+                    firebase.auth().onAuthStateChanged(function (user) {
+                        if (user) {
+                            user.providerData.forEach(function (profile) {
+                            
+                             $('.nav').prepend('<li class="nav-item"><a class="nav-link" >'+profile.displayName+'</a></li>');
+                             $('.nav').prepend('<li class="nav-item"><a class="nav-link" ><img src="'+profile.photoURL+'" width="30" height="30" class="d-inline-block align-top rounded-circle" alt=""></a></li>');
+                            
+                            });
+                           $('#Facebook-Authen').toggle();
+                          
+                        } else {
+                            $('#Logout').hide();
+
+                        }
+                    });
+                
                 </script>
+                <style>
+                .material-icons.orange600 { color: #FB8C00; }
+                </style>
 </head>
 
 <body>
@@ -45,14 +69,12 @@
         <div class="header clearfix">
             <nav>
                 <ul class="nav nav-pills float-right">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+                    
+                    <li class="nav-item" id="Facebook-Authen">
+                       <a class="nav-link" href="/Authentication-Facebook.html" id="btn-Fb-Au" ><i class="fa fa-facebook-official" aria-hidden="true"></i> Login</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
+                    <li class="nav-item" id="Logout">
+                        <a class="nav-link" href="/Logout.html" >Logout</a>
                     </li>
                 </ul>
             </nav>
@@ -62,28 +84,22 @@
             <div class="media">
                 <div class="media-body">
                     <h5 class="display-3">App success made simple</h5>
-                   <p> The tools and infrastructure you need to build better apps and grow successful businesses </p>
-                     <p><a class="btn btn-lg btn-success" href="https://firebase.google.com/" role="button">Let's check it out</a></p>
+                    <p> The tools and infrastructure you need to build better apps and grow successful businesses </p>
+                    <p><a class="btn btn-lg btn-success" href="https://firebase.google.com/" role="button">Let's check it out</a></p>
                 </div>
                 <img class="d-flex ml-3" width="200rem" src="firebase-logo.png" alt="Generic placeholder image">
             </div>
-           
+
         </div>
-        <div class="row ">
+        <div class="row ">           
             <div class="col">
-            </div>
-            <div class="col-6">
                 <div class="card">
                     <ul class="list-group list-group-flush">
-
                     </ul>
                 </div>
             </div>
-            <div class="col">
-            </div>
         </div>
     </div>
-
 </body>
 
 </html>

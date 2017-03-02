@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Facebook</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+        crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+            crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+                crossorigin="anonymous"></script>
+                <script src="https://use.fontawesome.com/4c1ee4b315.js"></script>
+               
+                <script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
+                <script src="/config.js"></script>
+                <script>
+                    firebase.initializeApp(config);
+                    var provider = new firebase.auth.FacebookAuthProvider();
+                    provider.addScope('user_birthday');
+                    provider.setCustomParameters({
+                        'display': 'popup'
+                    });
+                    firebase.auth().signInWithPopup(provider).then(function (result) {
+                        window.location = "/index.html";
+                    }).catch(function (error) {
+                        window.location = "/index.html";
+                    });
+                </script>
+                <style>
+                    .loader {
+                        border: 16px solid #f3f3f3;
+                        /* Light grey */
+                        border-top: 16px solid #3498db;
+                        /* Blue */
+                        border-radius: 50%;
+                        width: 120px;
+                        height: 120px;
+                        animation: spin 2s linear infinite;
+                    }
+                    
+                    @keyframes spin {
+                        0% {
+                            transform: rotate(0deg);
+                        }
+                        100% {
+                            transform: rotate(360deg);
+                        }
+                    }
+                </style>
+</head>
+
+<body>
+    <div class="contener">
+        <div class="row">
+               <div class="col"></div>
+            <div class="col">
+                <h1>
+                    <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>
+                </h1>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+
+</body>
+
+</html>
