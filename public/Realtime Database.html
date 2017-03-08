@@ -15,8 +15,8 @@
         <script src="/config.js"></script>
         <script>
           firebase.initializeApp(config);
-
           var database = firebase.database();
+
 
           function writeUserData(userId, name, email) {
             firebase.database().ref('users/' + userId).set({
@@ -39,50 +39,114 @@
           }
 
           // Create a new post reference with an auto-generated id
-          var postListRef = firebase.database().ref('message');
-          var newPostRef = postListRef.push();
+          var postListRef = firebase.database().ref('message').limitToLast(2);;
+          //var newPostRef = postListRef.push();
           //newPostRef.set("hi");
 
           postListRef.on('child_added', function (data) {
-            list(".user", data.val(), data.key);
+            list(data.val(), data.key);
           });
           postListRef.on('child_removed', function (data) {
-            removelist("jj", data.key);
+            //removelist("jj", data.key);
           });
-          function list(postElement, val, key) {
-            $(".list-group").append(' <li class="list-group-item" id="' + key + '">User: ' + val + '</li>');
+          function list(val, key) {
+            var User_id;
+            var user = firebase.auth().currentUser;
+            if (user != null) {
+              User_id = user.displayName || user.uid;
+
+            }
+            if (val.user == User_id) {
+              $(".list-group").append(' <li class="list-group-item" id="' + key + '"><p class="ta-right">' + val.text + '</p></li>');
+              $('#' + key + ' p').append('     <img src="' + val.photoURL + '" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="">');
+            } else {
+              $(".list-group").append(' <li class="list-group-item" id="' + key + '"><p class="ta-left">' + val.text + '</p></li>');
+              $('#' + key + ' p').prepend('<img src="' + val.photoURL + '" width="30" height="30" class="d-inline-block align-top rounded-circle" alt="">     ');
+            }
+
             $('#' + key + '').hide().fadeIn();
           }
           function removelist(postElement, key) {
             $('#' + key + '').fadeOut();
           }
+          function add(text) {
+            var User_id, photoUrl;
+            var user = firebase.auth().currentUser;
+            if (user != null) {
+              User_id = user.displayName || user.uid;
+              photoUrl = user.photoURL;;
+            }
+            var postListRef = firebase.database().ref('message');
+            var newPostRef = postListRef.push();
+            newPostRef.set(
+              {
+                "user": User_id,
+                "text": text,
+                "photoURL": photoUrl
+              }
+            );
+          }
         </script>
-
+        <style>
+          .ta-right {
+            text-align: right;
+            width: 100%
+          }
+          .ta-left {
+            text-align: left;
+            width: 100%
+          }
+        </style>
 </head>
 
 <body>
 
   <div class="container">
-    <div class="row">
-      <div class="col"></div>
-      <div class="col-6">
-        <h1 class="display-3">Realtime Database</h1>
+    <div class="row justify-content-center">
+      <div class="col">
+        <h1 class="display-3">Realtime Database
+          <small class="text-muted">Chat</small></h1>
       </div>
-      <div class="col"></div>
     </div>
     <div class="row ">
+
       <div class="col">
-      </div>
-      <div class="col-6">
         <div class="card">
           <ul class="list-group list-group-flush">
           </ul>
         </div>
       </div>
       <div class="col">
+        <form class="form-inline">
+          <label class="sr-only" for="inlineFormInput">Name</label>
+          <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="ข้อความ">
+          <button type="button" class="btn btn-primary">ส่ง</button>
+        </form>
       </div>
     </div>
   </div>
 </body>
 
 </html>
+<script>
+          $(document).keypress(function (e) {
+            if (e.which == 13 || event.keyCode == 13) {
+              if ($('#inlineFormInput').val() == '') {
+                return false;
+              }
+              add($('#inlineFormInput').val());
+              $('#inlineFormInput').val('');
+              $('#inlineFormInput').focus();
+              return false;
+            }
+          });
+          $('.btn').on('click', function () {
+            if ($('#inlineFormInput').val() == '') {
+              return false;
+            }
+            add($('#inlineFormInput').val());
+            $('#inlineFormInput').val('');
+            $('#inlineFormInput').focus();
+          });
+
+</script>

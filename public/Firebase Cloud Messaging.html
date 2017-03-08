@@ -4,19 +4,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Firebase Cloud Messaging</title>
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
     crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
-      crossorigin="anonymous"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
-        crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+    crossorigin="anonymous"></script>
   <script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
- <script src="/config.js"></script>
+  <script src="/config.js"></script>
 
 
   <script>
- 
     firebase.initializeApp(config);
     const messaging = firebase.messaging();
     messaging.requestPermission()
@@ -25,7 +24,41 @@
         return messaging.getToken();
       })
       .then(function (Token) {
-        console.log(Token);
+       console.log(Token);
+
+        var topicName1 = "news";
+
+        var topicUrl = "https://iid.googleapis.com/iid/v1/" + Token + "/rel/topics/" + topicName1;
+        $.ajax({
+          url: topicUrl,
+          type: 'post',
+          data: {},
+          headers: {
+            "Content-Type": 'application/json',
+            "Authorization": ProjectKey
+          },
+          dataType: 'json',
+          success: function (data) {
+            //console.log('subscribe to topic: ', data);
+            $(".list-group").append(' <li class="list-group-item">subscribe to topic: ' + topicName1 + '</li>');
+          }
+        });
+         var topicName = "game";
+         topicUrl = "https://iid.googleapis.com/iid/v1/" + Token + "/rel/topics/" + topicName;
+          $.ajax({
+          url: topicUrl,
+          type: 'post',
+          data: {},
+          headers: {
+            "Content-Type": 'application/json',
+            "Authorization": ProjectKey
+          },
+          dataType: 'json',
+          success: function (data) {
+            //console.log('subscribe to topic: ', data);
+            $(".list-group").append(' <li class="list-group-item">subscribe to topic: ' + topicName + '</li>');
+          }
+        });
       })
       .catch(function () {
         console.log('Not have Permission');
@@ -50,34 +83,87 @@
 
     messaging.onMessage(function (payload) {
       console.log("Message received. ", payload);
-      $(".list-group").append(' <li class="list-group-item">'+payload.notification.title+': ' + payload.notification.body + '</li>');
-     
+      $(".list-group").append(' <li class="list-group-item">' + payload.notification.title + ': ' + payload.notification.body + '</li>');
+
     });
   </script>
 </head>
 
 <body>
   <div class="container">
-    <div class="row">
-      <div class="col"></div>
+    <div class="row justify-content-center">
+
       <div class="col-6">
         <h1>Firebase Cloud Messaging</h1>
       </div>
-      <div class="col"></div>
+
+
     </div>
-    <div class="row ">
-      <div class="col">
-      </div>
+    <br />
+    <div class="row justify-content-center">
       <div class="col-6">
         <div class="card">
           <ul class="list-group list-group-flush">
           </ul>
         </div>
       </div>
-      <div class="col">
+      <div class="col-6">
+        <div class="form-group row">
+          <label for="example-text-input" class="col-2 col-form-label">Topic</label>
+          <div class="col-10">
+            <input class="form-control" type="text" id="text-Topic">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="example-text-input" class="col-2 col-form-label">ข้อความ</label>
+          <div class="col-10">
+            <input class="form-control" type="text" id="text-input">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="example-text-input" class="col-2 col-form-label"></label>
+          <div class="col-10">
+            <button type="button" class="btn btn-warning btn-block" id="send">ส่ง</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </body>
 
 </html>
+<script>
+    $('#send').on('click', function () {
+      if($('#text-Topic').val()=='' || $('#text-input').val()=='' ){return false}
+      var datasend = {
+        notification: {
+          title: "แจ้งเตือน",
+          body: $('#text-input').val(),
+          icon: "/firebase-logo.png",
+          click_action: "https://firebase.google.com/?hl=th"
+        },
+
+        to: "/topics/"+$('#text-Topic').val()
+      }
+
+      let Url = "https://fcm.googleapis.com/fcm/send";
+      $.ajax({
+        url: Url,
+        type: 'post',
+        data:JSON.stringify(datasend) ,
+        headers: {
+          "Content-Type": 'application/json',
+          "Authorization": ProjectKey
+        },
+        dataType: 'json',
+        success: function (data) {
+          console.log(data);
+
+        },
+        error: function(error){
+           console.log(error);
+        }
+      });
+    });
+
+</script>

@@ -12,7 +12,7 @@
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
                 crossorigin="anonymous"></script>
                 <script src="https://use.fontawesome.com/4c1ee4b315.js"></script>
-                 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
                 <script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
                 <script src="/config.js"></script>
                 <script>
@@ -45,22 +45,23 @@
                     firebase.auth().onAuthStateChanged(function (user) {
                         if (user) {
                             user.providerData.forEach(function (profile) {
-                            
-                             $('.nav').prepend('<li class="nav-item"><a class="nav-link" >'+profile.displayName+'</a></li>');
-                             $('.nav').prepend('<li class="nav-item"><a class="nav-link" ><img src="'+profile.photoURL+'" width="30" height="30" class="d-inline-block align-top rounded-circle" alt=""></a></li>');
-                            
+
+                                $('.nav').prepend('<li class="nav-item"><a class="nav-link" >' + profile.displayName + '</a></li>');
+                                $('.nav').prepend('<li class="nav-item"><a class="nav-link" ><img src="' + profile.photoURL + '" width="30" height="30" class="d-inline-block align-top rounded-circle" alt=""></a></li>');
+
                             });
-                           $('#Facebook-Authen').toggle();
-                          
+                            $('#Facebook-Authen').toggle();
+
                         } else {
                             $('#Logout').hide();
 
                         }
                     });
-                
                 </script>
                 <style>
-                .material-icons.orange600 { color: #FB8C00; }
+                    .material-icons.orange600 {
+                        color: #FB8C00;
+                    }
                 </style>
 </head>
 
@@ -69,12 +70,12 @@
         <div class="header clearfix">
             <nav>
                 <ul class="nav nav-pills float-right">
-                    
+
                     <li class="nav-item" id="Facebook-Authen">
-                       <a class="nav-link" href="/Authentication-Facebook.html" id="btn-Fb-Au" ><i class="fa fa-facebook-official" aria-hidden="true"></i> Login</a>
+                        <a class="nav-link" href="#" id="btn-Fb-Au"><i class="fa fa-facebook-official" aria-hidden="true"></i> Login</a>
                     </li>
                     <li class="nav-item" id="Logout">
-                        <a class="nav-link" href="/Logout.html" >Logout</a>
+                        <a class="nav-link" href="/Logout.html">Logout</a>
                     </li>
                 </ul>
             </nav>
@@ -91,7 +92,7 @@
             </div>
 
         </div>
-        <div class="row ">           
+        <div class="row ">
             <div class="col">
                 <div class="card">
                     <ul class="list-group list-group-flush">
@@ -103,3 +104,19 @@
 </body>
 
 </html>
+
+<script>
+                    $('#btn-Fb-Au').on('click', function () {
+                        var provider = new firebase.auth.FacebookAuthProvider();
+                        provider.addScope('user_birthday');
+                        provider.setCustomParameters({
+                            'display': 'popup'
+                        });
+                        firebase.auth().signInWithPopup(provider).then(function (result) {
+                            window.location = "/index.html";
+                        }).catch(function (error) {
+                            window.location = "/index.html";
+                        });
+                    });
+
+</script>
